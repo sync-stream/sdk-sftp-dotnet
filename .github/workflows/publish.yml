@@ -7,7 +7,7 @@ jobs:
   
   ## Publish Job
   publish:
-    name: 'Build, Pack & Publish'
+    name: 'NuGet Build & Publish'
     runs-on: 'ubuntu-latest'
     steps:
       
@@ -20,16 +20,15 @@ jobs:
         id: 'publish_nuget'
         uses: 'brandedoutcast/publish-nuget@v2'
         with:
-          BUILD_CONFIGURATION: 'Release'
-          BUILD_PLATFORM: 'AnyCPU'
           INCLUDE_SYMBOLS: true
-          NUGET_KEY: ${{secrets.SS_NUGET_API_KEY}}
+          NUGET_KEY: ${{ secrets.SS_NUGET_API_KEY }}
           PACKAGE_NAME: 'SyncStream.Sdk.Sftp'
           PROJECT_FILE_PATH: 'SyncStream.Sdk.Sftp/SyncStream.Sdk.Sftp.csproj'       
           TAG_COMMIT: false
   
   ## Documentation Job
   documentation:
+    name: 'Documentation Wiki Publish'
     runs-on: 'ubuntu-latest'
     steps:
       
