@@ -1,0 +1,46 @@
+name: 'Publish'
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  
+  ## Publish Job
+  publish:
+    name: 'Build, Pack & Publish'
+    runs-on: 'ubuntu-latest'
+    steps:
+      
+      ## Checkout
+      - name: 'Checkout'
+      - uses: 'actions/checkout@v2'
+
+      ## Publish
+      - name: 'Publish'
+        id: 'publish_nuget'
+        uses: 'brandedoutcast/publish-nuget@v2'
+        with:
+          BUILD_CONFIGURATION: 'Release'
+          BUILD_PLATFORM: 'AnyCPU'
+          INCLUDE_SYMBOLS: true
+          NUGET_KEY: ${{secrets.SS_NUGET_API_KEY}}
+          PACKAGE_NAME: 'SyncStream.Sdk.Sftp'
+          PROJECT_FILE_PATH: 'SyncStream.Sdk.Sftp/SyncStream.Sdk.Sftp.csproj'       
+          TAG_COMMIT: false
+  
+  ## Documentation Job
+  documentation:
+    runs-on: 'ubuntu-latest'
+    steps:
+      
+      ## Checkout
+      - name: 'Checkout'
+      - uses: 'actions/checkout@v1'
+      
+      ## Publish
+      - name: 'Publish'
+        uses: 'SwiftDocOrg/github-wiki-publish-action@v1'
+        with:
+          path: 'Documentation'
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.SS_GITHUB_WORKFLOW_ACTION_WIKI_PUBLISH_TOKEN }}
