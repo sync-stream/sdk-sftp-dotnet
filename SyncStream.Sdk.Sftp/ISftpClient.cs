@@ -137,6 +137,20 @@ public interface ISftpClient : IDisposable, IAsyncDisposable
     public void DeleteFiles(params string[] remoteFilenames);
 
     /// <summary>
+    /// This method asynchronously determines whether or not a directory exists
+    /// </summary>
+    /// <param name="remoteDirectory">The remote path to check</param>
+    /// <returns>A boolean denoting whether or not the directory exists</returns>
+    public bool DirectoryExists(string remoteDirectory);
+
+    /// <summary>
+    /// This method determines whether or not a directory exists
+    /// </summary>
+    /// <param name="remoteDirectory">The remote path to check</param>
+    /// <returns>An awaitable task containing a boolean denoting whether or not the directory exists</returns>
+    public Task<bool> DirectoryExistsAsync(string remoteDirectory);
+
+    /// <summary>
     /// This method recursively downloads the remote directory <paramref name="remoteDirectory" /> to the local directory <paramref name="directory" />
     /// </summary>
     /// <param name="remoteDirectory">The path on the remote server to the directory to download</param>
@@ -170,6 +184,20 @@ public interface ISftpClient : IDisposable, IAsyncDisposable
     public Task DownloadFileAsync(string remoteFilename, string filename);
 
     /// <summary>
+    /// This method determines whether or not a file exists
+    /// </summary>
+    /// <param name="remoteFilename">The remote file path to check</param>
+    /// <returns>A boolean denoting whether or not the file exists</returns>
+    public bool FileExists(string remoteFilename);
+
+    /// <summary>
+    /// This method asynchronously determines whether or not a file exists
+    /// </summary>
+    /// <param name="remoteFilename">The remote file path to check</param>
+    /// <returns>An awaitable task containing a boolean denoting whether or not the file exists</returns>
+    public Task<bool> FileExistsAsync(string remoteFilename);
+
+    /// <summary>
     /// This method generates an internal SFTP client from a provided configuration object
     /// </summary>
     /// <param name="configuration">The server connection configuration object from which to generate a connection</param>
@@ -198,6 +226,13 @@ public interface ISftpClient : IDisposable, IAsyncDisposable
     /// </summary>
     /// <param name="remoteDirectory">The path to the directory on the remote server</param>
     public void MakeDirectory(string remoteDirectory);
+
+    /// <summary>
+    /// This method asynchronously creates a new directory on the remote server at <paramref name="remoteDirectory" />
+    /// </summary>
+    /// <param name="remoteDirectory">The path to the directory on the remote server</param>
+    /// <returns>An awaitable task with no result</returns>
+    public Task MakeDirectoryAsync(string remoteDirectory);
 
     /// <summary>
     /// This method uploads the local directory <paramref name="directory" /> to the remote server as <paramref name="remoteDirectory" />

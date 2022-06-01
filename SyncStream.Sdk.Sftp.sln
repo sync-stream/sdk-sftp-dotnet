@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncStream.Sdk.Sftp", "SyncStream.Sdk.Sftp\SyncStream.Sdk.Sftp.csproj", "{1AC6C8C2-6AA7-444B-80F2-8AE5DD0F223E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncStream.Sdk.Sftp.Example", "SyncStream.Sdk.Sftp.Example\SyncStream.Sdk.Sftp.Example.csproj", "{D2216255-FC74-487A-9033-5B077121C6C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{1AC6C8C2-6AA7-444B-80F2-8AE5DD0F223E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC6C8C2-6AA7-444B-80F2-8AE5DD0F223E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC6C8C2-6AA7-444B-80F2-8AE5DD0F223E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2216255-FC74-487A-9033-5B077121C6C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2216255-FC74-487A-9033-5B077121C6C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2216255-FC74-487A-9033-5B077121C6C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2216255-FC74-487A-9033-5B077121C6C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

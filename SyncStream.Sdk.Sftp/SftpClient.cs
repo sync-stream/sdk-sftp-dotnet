@@ -49,7 +49,9 @@ public class SftpClient : ISftpClient
             Port = port,
             // Set the authentication username into the server connection configuration
             Username = username
-        }) { }
+        })
+    {
+    }
 
     /// <summary>
     /// This method instantiates our client service with a hostname, username, private key path, optional port and optional private key passphrase
@@ -72,7 +74,9 @@ public class SftpClient : ISftpClient
         PrivateKeyPassphrase = privateKeyPassphrase,
         // Set the authentication username into the server connection configuration 
         Username = username
-    }) { }
+    })
+    {
+    }
 
     /// <summary>
     /// This method instantiates our client service with a username and password
@@ -85,7 +89,9 @@ public class SftpClient : ISftpClient
         Password = password,
         // Set the authentication username into the server connection configuration
         Username = username
-    }) { }
+    })
+    {
+    }
 
     /// <summary>
     /// This method instantiates our client service with a username, private key path and optional private key passphrase
@@ -93,15 +99,18 @@ public class SftpClient : ISftpClient
     /// <param name="username">The authentication username</param>
     /// <param name="privateKeyPath">The path to the authentication private key</param>
     /// <param name="privateKeyPassphrase">Optional passphrase to decrypt the authentication private key</param>
-    public SftpClient(string username, string privateKeyPath, string privateKeyPassphrase = null) : this(new SftpClientConfiguration
+    public SftpClient(string username, string privateKeyPath, string privateKeyPassphrase = null) : this(
+        new SftpClientConfiguration
+        {
+            // Set the authentication private key path into the server connection configuration
+            PrivateKey = privateKeyPath,
+            // Set the authentication private key passphrase into the server connection configuration
+            PrivateKeyPassphrase = privateKeyPassphrase,
+            // Set the authentication username into the server connection configuration
+            Username = username
+        })
     {
-        // Set the authentication private key path into the server connection configuration
-        PrivateKey = privateKeyPath,
-        // Set the authentication private key passphrase into the server connection configuration
-        PrivateKeyPassphrase = privateKeyPassphrase,
-        // Set the authentication username into the server connection configuration
-        Username = username
-    }) { }
+    }
 
     /// <summary>
     /// This method establishes an SFTP connection
@@ -128,9 +137,10 @@ public class SftpClient : ISftpClient
     /// </summary>
     /// <param name="remoteDirectories">The list of remote paths to delete</param>
     /// <param name="itemCallback">Optional callback to execute when a directory or file is deleted</param>
-    public void DeleteDirectories(IEnumerable<string> remoteDirectories, ISftpClient.ItemDeleteCallback itemCallback = null)
+    public void DeleteDirectories(IEnumerable<string> remoteDirectories,
+        ISftpClient.ItemDeleteCallback itemCallback = null)
     {
-        
+
         // Iterate over the directories and delete them
         foreach (string remoteDirectory in remoteDirectories) DeleteDirectory(remoteDirectory, itemCallback);
     }
@@ -140,22 +150,25 @@ public class SftpClient : ISftpClient
     /// </summary>
     /// <param name="itemCallback">Optional callback to execute when a directory or file is deleted</param>
     /// <param name="remoteDirectories">The list of remote paths to delete</param>
-    public void DeleteDirectories(ISftpClient.ItemDeleteCallback itemCallback = null, params string[] remoteDirectories) =>
+    public void DeleteDirectories(ISftpClient.ItemDeleteCallback itemCallback = null,
+        params string[] remoteDirectories) =>
         DeleteDirectories(remoteDirectories.ToList(), itemCallback);
-    
+
     /// <summary>
     /// This method asynchronously deletes multiple directories at one time
     /// </summary>
     /// <param name="remoteDirectories">The list of remote paths to delete</param>
     /// <param name="itemCallback">Optional callback to execute when a directory or file is deleted</param>
-    public Task DeleteDirectoriesAsync(IEnumerable<string> remoteDirectories, ISftpClient.ItemDeleteCallbackAsync itemCallback = null)
+    public Task DeleteDirectoriesAsync(IEnumerable<string> remoteDirectories,
+        ISftpClient.ItemDeleteCallbackAsync itemCallback = null)
     {
         // Define our task list
         List<Task> tasks = new();
 
         // Iterate over the directories and delete them
-        foreach (string remoteDirectory in remoteDirectories) tasks.Add(DeleteDirectoryAsync(remoteDirectory, itemCallback));
-        
+        foreach (string remoteDirectory in remoteDirectories)
+            tasks.Add(DeleteDirectoryAsync(remoteDirectory, itemCallback));
+
         // We're done, return the awaitable tasks
         return Task.WhenAll(tasks);
     }
@@ -165,7 +178,8 @@ public class SftpClient : ISftpClient
     /// </summary>
     /// <param name="itemCallback">Optional callback to execute when a directory or file is deleted</param>
     /// <param name="remoteDirectories">The list of remote paths to delete</param>
-    public Task DeleteDirectoriesAsync(ISftpClient.ItemDeleteCallbackAsync itemCallback = null, params string[] remoteDirectories) =>
+    public Task DeleteDirectoriesAsync(ISftpClient.ItemDeleteCallbackAsync itemCallback = null,
+        params string[] remoteDirectories) =>
         DeleteDirectoriesAsync(remoteDirectories.ToList(), itemCallback);
 
     /// <summary>
@@ -204,17 +218,18 @@ public class SftpClient : ISftpClient
                 itemCallback?.Invoke(item, item.FullName);
             }
         }
-        
+
         // Delete the main directory
         Client.DeleteDirectory(remoteDirectory);
     }
-    
+
     /// <summary>
     /// This method asynchronously deletes the remote directory at <paramref name="remoteDirectory" /> from the server
     /// </summary>
     /// <param name="remoteDirectory">The remote path to the directory to delete from the server</param>
     /// <param name="itemCallback">The callback that is execute when an item in the directory is deleted</param>
-    public async Task DeleteDirectoryAsync(string remoteDirectory, ISftpClient.ItemDeleteCallbackAsync itemCallback = null)
+    public async Task DeleteDirectoryAsync(string remoteDirectory,
+        ISftpClient.ItemDeleteCallbackAsync itemCallback = null)
     {
         // Ensure we have a remote directory path
         if (string.IsNullOrEmpty(remoteDirectory) || string.IsNullOrWhiteSpace(remoteDirectory))
@@ -245,7 +260,7 @@ public class SftpClient : ISftpClient
                 if (itemCallback is not null) await itemCallback.Invoke(item, item.FullName);
             }
         }
-        
+
         // Delete the main directory
         Client.DeleteDirectory(remoteDirectory);
     }
@@ -269,17 +284,63 @@ public class SftpClient : ISftpClient
     /// <param name="remoteFilenames">The list of remote paths to delete</param>
     public void DeleteFiles(IEnumerable<string> remoteFilenames)
     {
-        
+
         // Iterate over the files
         foreach (string remoteFilename in remoteFilenames) DeleteFile(remoteFilename);
     }
-    
+
     /// <summary>
     /// This method deletes multiple files at one time
     /// </summary>
     /// <param name="remoteFilenames">The list of remote paths to delete</param>
     public void DeleteFiles(params string[] remoteFilenames) =>
         DeleteFiles(remoteFilenames.ToList());
+
+    /// <summary>
+    /// This method determines whether or not a directory exists
+    /// </summary>
+    /// <param name="remoteDirectory">The remote path to check</param>
+    /// <returns>A boolean denoting whether or not the directory exists</returns>
+    public bool DirectoryExists(string remoteDirectory)
+    {
+        // Try to list the directory
+        try
+        {
+            // List the directory
+            ListDirectory(remoteDirectory);
+
+            // We're done, the directory exists
+            return true;
+        }
+        catch (Exception)
+        {
+            // We're done, the directory doesn't exist
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// This method asynchronously determines whether or not a directory exists
+    /// </summary>
+    /// <param name="remoteDirectory">The remote path to check</param>
+    /// <returns>An awaitable task containing a boolean denoting whether or not the directory exists</returns>
+    public async Task<bool> DirectoryExistsAsync(string remoteDirectory)
+    {
+        // Try to list the directory
+        try
+        {
+            // List the directory
+            await ListDirectoryAsync(remoteDirectory);
+
+            // We're done, the directory exists
+            return true;
+        }
+        catch (Exception)
+        {
+            // We're done, the directory doesn't exist
+            return false;
+        }
+    }
 
     /// <summary>
     /// This method disposes of the instance
@@ -314,7 +375,8 @@ public class SftpClient : ISftpClient
     /// <param name="directory">The path on the local system to download the remote directory to</param>
     /// <param name="itemCallback">Optional callback to be executed upon each item downloaded</param>
     /// <exception cref="ArgumentNullException">Thrown when either <paramref name="remoteDirectory" /> or <paramref name="directory" /> are empty</exception>
-    public void DownloadDirectory(string remoteDirectory, string directory, ISftpClient.ItemDownloadCallback itemCallback = null)
+    public void DownloadDirectory(string remoteDirectory, string directory,
+        ISftpClient.ItemDownloadCallback itemCallback = null)
     {
         // Ensure we have a remote directory path
         if (string.IsNullOrEmpty(remoteDirectory) || string.IsNullOrWhiteSpace(remoteDirectory))
@@ -369,7 +431,8 @@ public class SftpClient : ISftpClient
     /// <param name="directory">The path on the local system to download the remote directory to</param>
     /// <param name="itemCallback">Optional asynchronous callback to be executed upon each item downloaded</param>
     /// <exception cref="ArgumentNullException">Thrown when either <paramref name="remoteDirectory" /> or <paramref name="directory" /> are empty</exception>
-    public async Task DownloadDirectoryAsync(string remoteDirectory, string directory, ISftpClient.ItemDownloadCallbackAsync itemCallback = null)
+    public async Task DownloadDirectoryAsync(string remoteDirectory, string directory,
+        ISftpClient.ItemDownloadCallbackAsync itemCallback = null)
     {
         // Ensure we have a remote directory path
         if (string.IsNullOrEmpty(remoteDirectory) || string.IsNullOrWhiteSpace(remoteDirectory))
@@ -432,10 +495,10 @@ public class SftpClient : ISftpClient
 
         // Download the remote file from the server
         Client.DownloadFile(remoteFilename, file);
-        
+
         // We're done, flush the file to disk
         file.Flush();
-        
+
         // We're done with the file, dispose of it
         file.Dispose();
     }
@@ -455,12 +518,70 @@ public class SftpClient : ISftpClient
 
         // Download the remote file from the server
         await Task.Factory.FromAsync(Client.BeginDownloadFile(remoteFilename, file, null), Client.EndDownloadFile);
-        
+
         // We're done, flush the file to disk
         await file.FlushAsync();
-        
+
         // We're done with the file, dispose of it
         await file.DisposeAsync().AsTask();
+    }
+
+    /// <summary>
+    /// This method determines whether or not a file exists
+    /// </summary>
+    /// <param name="remoteFilename">The remote file path to check</param>
+    /// <returns>A boolean denoting whether or not the file exists</returns>
+    public bool FileExists(string remoteFilename)
+    {
+        // Try to download the file
+        try
+        {
+            // Define our filename
+            string filename = Path.GetTempFileName();
+
+            // Download the file
+            DownloadFile(remoteFilename, filename);
+
+            // Delete the file
+            File.Delete(filename);
+
+            // We're done, the directory exists
+            return true;
+        }
+        catch (Exception)
+        {
+            // We're done, the directory doesn't exist
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// This method asynchronously determines whether or not a file exists
+    /// </summary>
+    /// <param name="remoteFilename">The remote file path to check</param>
+    /// <returns>An awaitable task containing a boolean denoting whether or not the file exists</returns>
+    public async Task<bool> FileExistsAsync(string remoteFilename)
+    {
+        // Try to download the file
+        try
+        {
+            // Define our filename
+            string filename = Path.GetTempFileName();
+
+            // Download the file
+            await DownloadFileAsync(remoteFilename, filename);
+
+            // Delete the file
+            File.Delete(filename);
+
+            // We're done, the directory exists
+            return true;
+        }
+        catch (Exception)
+        {
+            // We're done, the directory doesn't exist
+            return false;
+        }
     }
 
     /// <summary>
@@ -475,7 +596,7 @@ public class SftpClient : ISftpClient
         if ((string.IsNullOrEmpty(configuration.Password) || string.IsNullOrWhiteSpace(configuration.Password)) &&
             (string.IsNullOrEmpty(configuration.PrivateKey) || string.IsNullOrWhiteSpace(configuration.PrivateKey)))
             throw new Exception("A Password or PrivateKey must me provided in the configuration for Authentication.");
-        
+
         // Instantiate our connection information
         ConnectionInfo connection;
 
@@ -528,7 +649,8 @@ public class SftpClient : ISftpClient
     /// <param name="path">The remote folder path to list</param>
     /// <param name="callback">An optional callback that receives the directory listing</param>
     /// <returns>A list of files in the remote server directory</returns>
-    public async Task<List<SftpFile>> ListDirectoryAsync(string path, ISftpClient.ListDirectoryAsyncCallback callback = null)
+    public async Task<List<SftpFile>> ListDirectoryAsync(string path,
+        ISftpClient.ListDirectoryAsyncCallback callback = null)
     {
         // Ensure we're connected to the server
         if (!Client.IsConnected) Connect();
@@ -556,15 +678,35 @@ public class SftpClient : ISftpClient
     {
         // Define our reserved directories
         string[] reservedDirectories = new string[] {".", "..", "/", @"\", ""};
-        
+
         // Ensure the directory isn't reserved
         if (reservedDirectories.Contains(remoteDirectory)) return;
 
         // Ensure we're connected to the server
         if (!Client.IsConnected) Connect();
 
-        // We're done, create the directory on the server
-        Client.CreateDirectory(remoteDirectory);
+        // Check to see if the directory exists and create it
+        if (!DirectoryExists(remoteDirectory)) Client.CreateDirectory(remoteDirectory);
+    }
+
+    /// <summary>
+    /// This method asynchronously creates a new directory on the remote server at <paramref name="remoteDirectory" />
+    /// </summary>
+    /// <param name="remoteDirectory">The path to the directory on the remote server</param>
+    /// <returns>An awaitable task with no result</returns>
+    public async Task MakeDirectoryAsync(string remoteDirectory)
+    {
+        // Define our reserved directories
+        string[] reservedDirectories = new string[] {".", "..", "/", @"\", ""};
+
+        // Ensure the directory isn't reserved
+        if (reservedDirectories.Contains(remoteDirectory)) return;
+
+        // Ensure we're connected to the server
+        if (!Client.IsConnected) Connect();
+
+        // Check to see if the directory exists and create it
+        if (!await DirectoryExistsAsync(remoteDirectory)) Client.CreateDirectory(remoteDirectory);
     }
 
     /// <summary>
@@ -575,7 +717,8 @@ public class SftpClient : ISftpClient
     /// <param name="overwrite">Denote whether or not files should be overwritten</param>
     /// <param name="itemCallback">Optional callback to be executed upon each item downloaded</param>
     /// <exception cref="ArgumentException">Thrown when <paramref name="directory" /> isn't a directory</exception>
-    public void UploadDirectory(string directory, string remoteDirectory, bool overwrite = true, ISftpClient.ItemUploadCallback itemCallback = null)
+    public void UploadDirectory(string directory, string remoteDirectory, bool overwrite = true,
+        ISftpClient.ItemUploadCallback itemCallback = null)
     {
         // Ensure we're connected to the server
         if (!Client.IsConnected) Connect();
@@ -594,7 +737,7 @@ public class SftpClient : ISftpClient
             MakeDirectory(remoteDirectory);
 
             // Iterate over the subdirectories and create them
-            foreach (DirectoryInfo subDirectory in directoryInfo.EnumerateDirectories())
+            foreach (DirectoryInfo subDirectory in directoryInfo.EnumerateDirectories().OrderBy(d => d.FullName))
             {
                 // Localize the remote directory path
                 string path = $"{remoteDirectory}{Path.DirectorySeparatorChar}{subDirectory.Name}";
@@ -607,7 +750,7 @@ public class SftpClient : ISftpClient
             }
 
             // Iterate over the files and upload them
-            foreach (FileInfo file in directoryInfo.EnumerateFiles())
+            foreach (FileInfo file in directoryInfo.EnumerateFiles().OrderBy(f => f.FullName))
             {
                 // Localize the remote file path
                 string path = $"{remoteDirectory}{Path.DirectorySeparatorChar}{file.Name}";
@@ -632,7 +775,8 @@ public class SftpClient : ISftpClient
     /// <param name="overwrite">Denote whether or not files should be overwritten</param>
     /// <param name="itemCallback">Optional asynchronous callback to be executed upon each item downloaded</param>
     /// <exception cref="ArgumentException">Thrown when <paramref name="directory" /> isn't a directory</exception>
-    public async Task UploadDirectoryAsync(string directory, string remoteDirectory, bool overwrite = true, ISftpClient.ItemUploadCallbackAsync itemCallback = null)
+    public async Task UploadDirectoryAsync(string directory, string remoteDirectory, bool overwrite = true,
+        ISftpClient.ItemUploadCallbackAsync itemCallback = null)
     {
         // Ensure we're connected to the server
         if (!Client.IsConnected) Connect();
@@ -648,10 +792,10 @@ public class SftpClient : ISftpClient
         if (directoryInfo.Exists)
         {
             // Create the directory on the server
-            MakeDirectory(remoteDirectory);
+            await MakeDirectoryAsync(remoteDirectory);
 
             // Iterate over the subdirectories and create them
-            foreach (DirectoryInfo subDirectory in directoryInfo.EnumerateDirectories())
+            foreach (DirectoryInfo subDirectory in directoryInfo.EnumerateDirectories().OrderBy(d => d.FullName))
             {
                 // Localize our remote directory path
                 string path = $"{remoteDirectory}{Path.DirectorySeparatorChar}{subDirectory.Name}";
@@ -662,9 +806,9 @@ public class SftpClient : ISftpClient
                 // Check for a callback and add the callback task
                 if (itemCallback is not null) await itemCallback.Invoke(subDirectory, subDirectory.FullName, path);
             }
-            
+
             // Iterate over the files and add the upload to the task list
-            foreach (FileInfo file in directoryInfo.EnumerateFiles())
+            foreach (FileInfo file in directoryInfo.EnumerateFiles().OrderBy(f => f.FullName))
             {
                 // Localize our remote file path
                 string path = $"{remoteDirectory}{Path.DirectorySeparatorChar}{file.Name}";
