@@ -6,10 +6,13 @@
         <Description>
             This console application contains examples in using the SyncStream.Sdk.Sftp library
         </Description>
+        <DocumentationFile>https://github.com/sync-stream/sdk-sftp-dotnet/wiki</DocumentationFile>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <OutputType>Exe</OutputType>
         <PackageId>SyncStream.Sdk.Sftp.Example</PackageId>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
         <RepositoryUrl>https://github.com/sync-stream/sdk-sftp-dotnet</RepositoryUrl>
         <RootNamespace>SyncStream.Sdk.Sftp.Example</RootNamespace>
         <TargetFramework>net6.0</TargetFramework>

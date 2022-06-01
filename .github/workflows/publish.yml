@@ -20,7 +20,7 @@ jobs:
         id: 'publish_nuget'
         uses: 'brandedoutcast/publish-nuget@v2'
         with:
-          INCLUDE_SYMBOLS: true
+          INCLUDE_SYMBOLS: false
           NUGET_KEY: ${{ secrets.SS_NUGET_API_KEY }}
           PACKAGE_NAME: 'SyncStream.Sdk.Sftp'
           PROJECT_FILE_PATH: 'SyncStream.Sdk.Sftp/SyncStream.Sdk.Sftp.csproj'       
