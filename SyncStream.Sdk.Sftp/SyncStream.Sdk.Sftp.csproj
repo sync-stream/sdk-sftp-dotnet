@@ -5,6 +5,7 @@
         <Company>SyncStream Solutions</Company>
         <Description>
             This library contains an SSH.NET wrapper for specific use with SyncStream Solution's SFTP server.
+            Please see the example app at https://github.com/sync-stream/sdk-sftp-dotnet/tree/main/SyncStream.Sdk.Sftp.Example
         </Description>
         <DocumentationFile>https://github.com/sync-stream/sdk-sftp-dotnet/wiki</DocumentationFile>
         <ImplicitUsings>enable</ImplicitUsings>
